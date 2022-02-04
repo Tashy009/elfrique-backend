@@ -66,8 +66,8 @@ app.use("/images", express.static(__dirname + "public/images"));
 app.use("/assets", express.static(__dirname + "public/assets"));
 
 // routes
-app.use("/api/v1", apiRoute);
 app.use("/", webRoute);
+app.use("/api/v1", apiRoute);
 
 /* app.get("/", (req, res, next) => {
   res.render("signup2");
