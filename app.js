@@ -16,6 +16,8 @@ const app = express();
 //const auth = require("./config/auth");
 const db = require("./database/db");
 const Authmiddleware = require("./middleware/Authmiddleware");
+const apiRoute = require("./routes/apiRoute");
+const webRoute = require("./routes/webRoutes");
 
 app.use(bodyParser.json());
 app.use(
@@ -27,8 +29,6 @@ app.use(
 const Op = Sequelize.Op;
 
 // routes includes
-const apiRoute = require("./routes/apiRoute");
-const webRoute = require("./routes/webRoutes");
 
 // imports initalization
 
