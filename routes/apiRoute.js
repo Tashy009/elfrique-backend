@@ -5,7 +5,11 @@ const AuthController = require("../controllers/Auth");
 
 const ProfileController = require("../controllers/profile");
 
-const VoteContestController = require("../controllers/votingcontest");
+const VoteContestController = require("../controllers/votingContest");
+
+const AwardContestController = require("../controllers/awardContest");
+
+const upload = require("../helpers/upload");
 
 const {
   registerValidation,
@@ -14,6 +18,7 @@ const {
   resetPasswordValidation,
   changePasswordValidation,
   createVoteValidation,
+  createAwardValidation,
 } = require("../helpers/validator");
 
 const router = express.Router();
@@ -55,9 +60,10 @@ router.post(
 );
 
 router.post(
-  "/createteVote",
+  "/createVote",
   Auth,
-  changePasswordValidation,
+  upload.single("image"),
+  createVoteValidation(),
   validate,
   VoteContestController.createVoteContest
 );
@@ -67,5 +73,72 @@ router.get("/getallVote", Auth, VoteContestController.getallVOteContest);
 router.get("/getVote/:id", Auth, VoteContestController.getSingleVoteContest);
 
 router.patch("/updateVote/:id", Auth, VoteContestController.updateVoteContest);
+
+router.post(
+  "/createAward",
+  Auth,
+  upload.single("image"),
+  createAwardValidation(),
+  validate,
+  //upload.single("image"),
+  AwardContestController.createAwardContest
+);
+
+router.get("/getallAward", Auth, AwardContestController.getAllAwardsContest);
+
+router.get("/getAward/:id", Auth, AwardContestController.getSingleAwardContest);
+
+router.post(
+  "/createContestant/:id",
+  Auth,
+  upload.single("image"),
+  VoteContestController.createContestants
+);
+
+router.get(
+  "/getallContestant/:id",
+  Auth,
+  VoteContestController.getAllContestants
+);
+
+router.get(
+  "/getContestant/:title/:id",
+  Auth,
+  VoteContestController.getSingleContestant
+);
+
+router.post(
+  "/addSponsor/:id",
+  Auth,
+  upload.single("image"),
+  VoteContestController.addSponsor
+);
+
+router.post("/addInfo/:id", Auth, VoteContestController.addInfo);
+
+router.post(
+  "/createCategories/:id",
+  Auth,
+  AwardContestController.createAwardCategories
+);
+
+router.get(
+  "/getallCategories/:id",
+  Auth,
+  AwardContestController.getAllAwardCategories
+);
+
+router.get(
+  "/getSingleCategory/:title/:id",
+  Auth,
+  AwardContestController.getSingleCategory
+);
+
+router.post(
+  "/createNominees/:title/:id",
+  Auth,
+  upload.single("image"),
+  AwardContestController.createAwardNominees
+);
 
 module.exports = router;

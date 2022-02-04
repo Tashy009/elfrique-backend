@@ -9,11 +9,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // votingContest.belongsTo(models.adminuser);
+      votingContest.belongsTo(models.adminuser);
+      votingContest.hasMany(models.contestants);
+      votingContest.hasMany(models.contestInfo);
+      votingContest.hasMany(models.sponsors);
     }
   }
   votingContest.init(
     {
+      id: {
+        allowNull: true,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV1,
+      },
       title: DataTypes.STRING,
       type: DataTypes.STRING,
       votelimit: DataTypes.STRING,
@@ -23,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       paymentgateway: DataTypes.STRING,
       fee: DataTypes.STRING,
       packagestatus: DataTypes.STRING,
+      image: DataTypes.STRING,
     },
     {
       sequelize,

@@ -10,10 +10,20 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       awardContest.belongsTo(models.adminuser);
+      awardContest.hasMany(models.contestInfo);
+      awardContest.hasMany(models.sponsors);
+      awardContest.hasMany(models.awardCategories);
+      awardContest.hasMany(models.awardNominees);
     }
   }
   awardContest.init(
     {
+      id: {
+        allowNull: true,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV1,
+      },
       title: DataTypes.STRING,
       type: DataTypes.STRING,
       votelimit: DataTypes.STRING,
@@ -24,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       fee: DataTypes.STRING,
       packagestatus: DataTypes.STRING,
       categories: DataTypes.STRING,
+      image: DataTypes.STRING,
     },
     {
       sequelize,

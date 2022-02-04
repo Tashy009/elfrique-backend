@@ -86,13 +86,29 @@ const createVoteValidation = () => {
     body("votelimit", "Enter votelimit").not().isEmpty(),
     body("startdate", "Enter Start Date").not().isEmpty(),
     body("closedate", "Enter End Date").not().isEmpty(),
-    body("fee", "Enter fee").not().isEmpty(),
+    //body("fee", "Enter fee").not().isEmpty(),
     body("type", "Enter Type").not().isEmpty(),
-    body("packagestatus", "Enter packagestatus").not().isEmpty(),
+    //body("packagestatus", "Enter packagestatus").not().isEmpty(),
     body("timezone", "Enter timezone").not().isEmpty(),
-    body("paymentgateway", "Enter description").not().isEmpty(),
-
+    body("paymentgateway", "Enter payment gateway").not().isEmpty(),
     //body("image", "Enter Image").not().isEmpty(),
+  ];
+};
+
+const createAwardValidation = () => {
+  return [
+    body("title", "Enter Title").not().isEmpty(),
+    // body("description", "Enter Description").not().isEmpty(),
+    body("type", "Enter Type").not().isEmpty(),
+    body("votelimit", "Enter votelimit").not().isEmpty(),
+    body("startdate", "Enter Start Date").not().isEmpty(),
+    body("closedate", "Enter End Date").not().isEmpty(),
+    body("timezone", "Enter timezone").not().isEmpty(),
+    body("paymentgateway", "Enter payment gateway").not().isEmpty(),
+    // body("fee", "Enter fee").not().isEmpty(),
+    body("packagestatus", "Enter packagestatus").not().isEmpty(),
+    body("categories", "Enter categories").not().isEmpty(),
+    //check("image", "Enter Image").not().isEmpty(),
   ];
 };
 
@@ -104,4 +120,5 @@ module.exports = {
   resetPasswordValidation,
   changePasswordValidation,
   createVoteValidation,
+  createAwardValidation,
 };

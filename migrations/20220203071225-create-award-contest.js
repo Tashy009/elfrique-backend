@@ -38,6 +38,9 @@ module.exports = {
       categories: {
         type: Sequelize.STRING,
       },
+      image: {
+        type: Sequelize.STRING,
+      },
       adminuserId: {
         type: Sequelize.INTEGER,
         references: {

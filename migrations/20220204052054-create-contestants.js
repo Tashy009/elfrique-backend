@@ -1,47 +1,29 @@
 "use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("votingContests", {
+    await queryInterface.createTable("contestants", {
       id: {
         allowNull: true,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV1,
       },
-      title: {
-        type: Sequelize.STRING,
-      },
-      type: {
-        type: Sequelize.STRING,
-      },
-      votelimit: {
-        type: Sequelize.STRING, //chanhe to date
-      },
-      startdate: {
-        type: Sequelize.STRING,
-      },
-      closedate: {
-        type: Sequelize.STRING,
-      },
-      timezone: {
-        type: Sequelize.STRING,
-      },
-      paymentgateway: {
-        type: Sequelize.STRING,
-      },
-      fee: {
-        type: Sequelize.STRING,
-      },
-      packagestatus: {
+      fullname: {
         type: Sequelize.STRING,
       },
       image: {
         type: Sequelize.STRING,
       },
-      adminuserId: {
-        type: Sequelize.INTEGER,
+      contestantnumber: {
+        type: Sequelize.STRING,
+      },
+      about: {
+        type: Sequelize.TEXT,
+      },
+      votingContestId: {
+        type: Sequelize.UUID,
         references: {
-          model: "adminusers",
+          model: "votingContests",
           key: "id",
         },
         onDelete: "CASCADE",
@@ -57,6 +39,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("votingContests");
+    await queryInterface.dropTable("contestants");
   },
 };

@@ -9,17 +9,25 @@ const nodemailer = require("nodemailer");
 const User = require("../models").adminuser;
 const ResetPasswords = require("../models").resetpassword;
 const Profile = require("../models").profile;
-const votingContest = require("../models").votingcontest;
+const votingContest = require("../models").votingContest;
+const contestant = require("../models").contestants;
+const sponsors = require("../models").sponsors;
+const contestInfo = require("../models").contestInfo;
+const awardContest = require("../models").awardContest;
 
 const excludeAtrrbutes = { exclude: ["createdAt", "updatedAt", "deletedAt"] };
 
 // imports initialization
 const { Op } = require("sequelize");
+const cloudinary = require("../helpers/cloudinary");
+const upload = require("../helpers/upload");
 
 exports.createVoteContest = async (req, res) => {
   try {
+    const result = await cloudinary.uploader.upload(req.file.path);
     const adminuserId = req.user.id;
     req.body.adminuserId = adminuserId;
+    req.body.image = result.secure_url;
     const profile = await Profile.findOne({
       where: { adminuserId },
       include: [
@@ -183,6 +191,219 @@ exports.deleteVoteContest = async (req, res) => {
     });
     return res.status(200).send({
       vote,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.createContestants = async (req, res) => {
+  try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const adminuserId = req.user.id;
+    //req.body.adminuserId = adminuserId;
+    req.body.image = result.secure_url;
+    const profile = await Profile.findOne({
+      where: { adminuserId },
+      include: [
+        {
+          model: User,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
+    });
+    if (!profile) {
+      return res.status(404).send({
+        message: "User not found",
+      });
+    }
+    const voteContest = await votingContest.findOne({
+      where: { id: req.params.id },
+    });
+    if (!voteContest) {
+      return res.status(404).send({
+        message: "Contest not found",
+      });
+    }
+    req.body.votingContestId = voteContest.id;
+    const contestantbody = await contestant.create(req.body);
+    return res.status(200).send({
+      contestantbody,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.getAllContestants = async (req, res) => {
+  try {
+    const adminuserId = req.user.id;
+    const profile = await Profile.findOne({
+      where: { adminuserId },
+      include: [
+        {
+          model: User,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
+    });
+    if (!profile) {
+      return res.status(404).send({
+        message: "User not found",
+      });
+    }
+    const voteContest = await votingContest.findOne({
+      where: { id: req.params.id },
+    });
+    if (!voteContest) {
+      return res.status(404).send({
+        message: "Contest not found",
+      });
+    }
+    const contestants = await contestant.findAll({
+      where: {
+        votingContestId: req.params.id,
+      },
+    });
+    return res.status(200).send({
+      contestants,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.getSingleContestant = async (req, res) => {
+  try {
+    const adminuserId = req.user.id;
+    const profile = await Profile.findOne({
+      where: { adminuserId },
+      include: [
+        {
+          model: User,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
+    });
+    if (!profile) {
+      return res.status(404).send({
+        message: "User not found",
+      });
+    }
+    const voteContest = await votingContest.findOne({
+      where: { title: req.params.title },
+    });
+    if (!voteContest) {
+      return res.status(404).send({
+        message: "Contest not found",
+      });
+    }
+    const contestants = await contestant.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+    return res.status(200).send({
+      contestants,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.addSponsor = async (req, res) => {
+  try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const adminuserId = req.user.id;
+    //req.body.adminuserId = adminuserId;
+    req.body.image = result.secure_url;
+    //const adminuserId = req.user.id;
+    const profile = await Profile.findOne({
+      where: { adminuserId },
+      include: [
+        {
+          model: User,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
+    });
+    if (!profile) {
+      return res.status(404).send({
+        message: "User not found",
+      });
+    }
+    const voteContest = await votingContest.findOne({
+      where: { id: req.params.id },
+    });
+    if (!voteContest) {
+      const awardContests = await awardContest.findOne({
+        where: { id: req.params.id },
+      });
+      if (!awardContests) {
+        return res.status(404).send({ message: "Contest not found" });
+      }
+      req.body.awardContestId = awardContests.id;
+    } else {
+      req.body.votingContestId = voteContest.id;
+    }
+    const sponsor = await sponsors.create(req.body);
+    return res.status(200).send({
+      sponsor,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.addInfo = async (req, res) => {
+  try {
+    const adminuserId = req.user.id;
+    const profile = await Profile.findOne({
+      where: { adminuserId },
+      include: [
+        {
+          model: User,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
+    });
+    if (!profile) {
+      return res.status(404).send({
+        message: "User not found",
+      });
+    }
+    const voteContest = await votingContest.findOne({
+      where: { id: req.params.id },
+    });
+    if (!voteContest) {
+      const awardContests = await awardContest.findOne({
+        where: { id: req.params.id },
+      });
+      if (!awardContests) {
+        return res.status(404).send({ message: "Contest not found" });
+      }
+      req.body.awardContestId = awardContests.id;
+    } else {
+      req.body.votingContestId = voteContest.id;
+    }
+    const infos = await contestInfo.create(req.body);
+    return res.status(200).send({
+      infos,
     });
   } catch (error) {
     console.log(error);
