@@ -7,7 +7,7 @@ const ProfileController = require("../controllers/profile");
 
 const VoteContestController = require("../controllers/votingContest");
 
-const AwardContestController = require("../controllers/awardContest");
+const AwardContestController = require("../controllers/AwardContest");
 
 const upload = require("../helpers/upload");
 
