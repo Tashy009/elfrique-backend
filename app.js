@@ -9,7 +9,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 
-const app = express();
+//const app = express();
 // local imports
 //const Users = require("./models").User
 //const parameters = require("./config/params");
@@ -22,6 +22,8 @@ const Op = Sequelize.Op; // imports initialization
 
 const apiRoute = require("./routes/apiRoute");
 const webRoute = require("./routes/webRoutes");
+
+const app = express();
 
 app.use(bodyParser.json());
 app.use(
