@@ -5,7 +5,7 @@ const AuthController = require("../controllers/Auth");
 
 const ProfileController = require("../controllers/profile");
 
-const VoteContestController = require("../controllers/votingContest");
+const VoteContestController = require("../controllers/VotingContest");
 
 const AwardContestController = require("../controllers/AwardContest");
 
