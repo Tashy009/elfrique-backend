@@ -80,7 +80,6 @@ router.post(
   upload.single("image"),
   createAwardValidation(),
   validate,
-  //upload.single("image"),
   AwardContestController.createAwardContest
 );
 
