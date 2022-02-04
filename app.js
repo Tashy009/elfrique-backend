@@ -16,6 +16,10 @@ const app = express();
 //const auth = require("./config/auth");
 const db = require("./database/db");
 const Authmiddleware = require("./middleware/Authmiddleware");
+
+// imports initialization
+const Op = Sequelize.Op; // imports initialization
+
 const apiRoute = require("./routes/apiRoute");
 const webRoute = require("./routes/webRoutes");
 
@@ -25,8 +29,6 @@ app.use(
     extended: true,
   })
 );
-// imports initialization
-const Op = Sequelize.Op;
 
 // routes includes
 
