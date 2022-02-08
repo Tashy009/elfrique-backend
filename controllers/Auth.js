@@ -267,7 +267,6 @@ exports.registerUser = async (req, res, next) => {
         port: process.env.EMAIL_PORT,
         secure: false, // true for 465, false for other ports
         tls: {
-          ciphers: "SSLv3",
           rejectUnauthorized: false,
         },
         auth: {
