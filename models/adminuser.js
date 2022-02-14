@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       adminuser.hasOne(models.profile);
       adminuser.hasMany(models.votingContest);
       adminuser.hasMany(models.awardContest);
+      adminuser.hasMany(models.event);
     }
   }
   adminuser.init(

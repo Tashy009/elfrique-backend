@@ -112,6 +112,34 @@ const createAwardValidation = () => {
   ];
 };
 
+const createEventValidation = () => {
+  return [
+    body("title", "Enter Title").not().isEmpty(),
+    body("country", "Enter Country").not().isEmpty(),
+    body("state", "Enter State").not().isEmpty(),
+    body("city", "Enter City").not().isEmpty(),
+    body("venue", "Enter Venue").not().isEmpty(),
+    body("startdate", "Enter Start Date").not().isEmpty(),
+    body("enddate", "Enter End Date").not().isEmpty(),
+    body("timezone", "Enter timezone").not().isEmpty(),
+    body("paymentgateway", "Enter payment gateway").not().isEmpty(),
+    body("description", "Enter event description").not().isEmpty(),
+    body("category", "Enter category").not().isEmpty(),
+    body("organisation", "Enter organisation name").not().isEmpty(),
+  ];
+};
+
+const createTicketsValidation = () => {
+  return [
+    body("name", "Enter Ticket Name").not().isEmpty(),
+    body("price", "Enter Price").not().isEmpty(),
+    body("quantity", "Enter Quantity").not().isEmpty(),
+    body("salesstart", "Enter Start Date").not().isEmpty(),
+    body("salesend", "Enter End Date").not().isEmpty(),
+    body("eventname", "Enter timezone").not().isEmpty(),
+  ];
+};
+
 module.exports = {
   validate,
   okvalidate,
@@ -121,4 +149,6 @@ module.exports = {
   changePasswordValidation,
   createVoteValidation,
   createAwardValidation,
+  createEventValidation,
+  createTicketsValidation,
 };

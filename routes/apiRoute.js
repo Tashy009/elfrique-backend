@@ -9,6 +9,10 @@ const VoteContestController = require("../controllers/VotingContest");
 
 const AwardContestController = require("../controllers/AwardContest");
 
+const EventController = require("../controllers/EventController");
+
+const TicketController = require("../controllers/TicketController");
+
 const upload = require("../helpers/upload");
 
 const {
@@ -19,6 +23,8 @@ const {
   changePasswordValidation,
   createVoteValidation,
   createAwardValidation,
+  createEventValidation,
+  createTicketsValidation,
 } = require("../helpers/validator");
 
 const router = express.Router();
@@ -139,5 +145,32 @@ router.post(
   upload.single("image"),
   AwardContestController.createAwardNominees
 );
+
+router.post(
+  "/createEvent",
+  upload.single("image"),
+  createEventValidation(),
+  validate,
+  Auth,
+  EventController.createEvents
+);
+
+router.get("/getAllEvents", Auth, EventController.getAllEvents);
+
+router.get("/getSingleEvent/:id", Auth, EventController.getSingleEvent);
+
+router.delete("/deleteEvent/:id", Auth, EventController.deleteEvent);
+
+router.patch("/updateEvent/:id", Auth, EventController.editEvent);
+
+router.post(
+  "/createTickets",
+  Auth,
+  createTicketsValidation(),
+  validate,
+  TicketController.createTickets
+);
+
+router.get("/getAllTickets", Auth, TicketController.getAllTickets);
 
 module.exports = router;

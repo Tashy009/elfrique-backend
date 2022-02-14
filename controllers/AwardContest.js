@@ -348,7 +348,7 @@ exports.createAwardNominees = async (req, res) => {
         message: "AwardCategories not found",
       });
     }
-    req.body.awardCategoriesId = Categories.id;
+    req.body.awardCategoriesId = Categories.id; //check this
     const Nominees = await awardNominees.create(req.body);
     return res.status(200).send({
       Nominees,
