@@ -164,13 +164,13 @@ router.delete("/deleteEvent/:id", Auth, EventController.deleteEvent);
 router.patch("/updateEvent/:id", Auth, EventController.editEvent);
 
 router.post(
-  "/createTickets",
+  "/createTickets/:id",
   Auth,
   createTicketsValidation(),
   validate,
   TicketController.createTickets
 );
 
-router.get("/getAllTickets", Auth, TicketController.getAllTickets);
+router.get("/getAllTickets/:id", Auth, TicketController.getAllTicketsById);
 
 module.exports = router;

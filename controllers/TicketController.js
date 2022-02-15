@@ -46,15 +46,10 @@ exports.createTickets = async (req, res) => {
       });
     }
 
-    if (!req.body.eventname) {
-      return res.status(404).send({
-        message: "Event name is required",
-      });
-    }
     const event = await Event.findOne({
       where: {
         adminuserId,
-        title: req.body.eventname,
+        id: req.params.id,
       },
     });
     if (!event) {
@@ -73,7 +68,7 @@ exports.createTickets = async (req, res) => {
   }
 };
 
-exports.getAllTickets = async (req, res) => {
+exports.getAllTicketsById = async (req, res) => {
   try {
     const adminuserId = req.user.id;
     const profile = await Profile.findOne({
@@ -94,14 +89,9 @@ exports.getAllTickets = async (req, res) => {
     }
 
     const tickets = await Ticket.findAll({
-      include: [
-        {
-          model: Event,
-          attributes: {
-            exclude: ["createdAt", "updatedAt", "deletedAt"],
-          },
-        },
-      ],
+      where: {
+        eventId: req.params.id,
+      },
     });
     return res.status(200).send({
       tickets,

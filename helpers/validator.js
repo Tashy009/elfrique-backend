@@ -136,7 +136,6 @@ const createTicketsValidation = () => {
     body("quantity", "Enter Quantity").not().isEmpty(),
     body("salesstart", "Enter Start Date").not().isEmpty(),
     body("salesend", "Enter End Date").not().isEmpty(),
-    body("eventname", "Enter timezone").not().isEmpty(),
   ];
 };
 
