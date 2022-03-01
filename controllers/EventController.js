@@ -14,6 +14,7 @@ const votingContest = require("../models").votingcontest;
 const awardContest = require("../models").awardContest;
 const awardCategories = require("../models").awardCategories;
 const awardNominees = require("../models").awardNominees;
+const eventsTicket = require("../models").eventsTicket;
 
 const excludeAtrrbutes = { exclude: ["createdAt", "updatedAt", "deletedAt"] };
 
@@ -77,6 +78,14 @@ exports.getAllEvents = async (req, res) => {
     }
     const events = await Event.findAll({
       where: { adminuserId },
+      include: [
+        {
+          model: eventsTicket,
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
     });
     return res.status(200).send({
       events,
@@ -108,6 +117,14 @@ exports.getSingleEvent = async (req, res) => {
     }
     const events = await Event.findOne({
       where: { adminuserId, id: req.params.id },
+      include: [
+        {
+          model: eventsTicket,
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
     });
     return res.status(200).send({
       events,
@@ -177,6 +194,27 @@ exports.editEvent = async (req, res) => {
     });
     return res.status(200).send({
       message: "Event updated successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.findAllEvents = async (req, res) => {
+  try {
+    const events = await Event.findAll({
+      include: [
+        {
+          model: eventsTicket,
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
+    });
+    return res.status(200).send({
+      events,
     });
   } catch (error) {
     console.log(error);

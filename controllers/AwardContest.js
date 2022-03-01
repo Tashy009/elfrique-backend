@@ -358,3 +358,36 @@ exports.createAwardNominees = async (req, res) => {
     return res.status(500).send({ message: "Server Error" });
   }
 };
+
+exports.findAllAwards = async (req, res) => {
+  try {
+    const awards = await awardContest.findAll({
+      include: [
+        {
+          model: awardCategories,
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+        {
+          model: awardNominees,
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+        {
+          model: User,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
+    });
+    return res.status(200).send({
+      awards,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};

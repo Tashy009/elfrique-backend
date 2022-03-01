@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       awardNominees.belongsTo(models.awardContest);
-      awardNominees.belongsTo(models.awardCategories);
+      awardNominees.belongsTo(models.awardCategories, {
+        foreignKey: "awardCategoriesId",
+        as: "Categories",
+      });
     }
   }
   awardNominees.init(

@@ -410,3 +410,31 @@ exports.addInfo = async (req, res) => {
     return res.status(500).send({ message: "Server Error" });
   }
 };
+
+exports.findAllVoteContest = async (req, res) => {
+  try {
+    const voteContests = await votingContest.findAll({
+      include: [
+        {
+          model: contestant,
+          as: "contestants",
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+        {
+          model: User,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
+    });
+    return res.status(200).send({
+      voteContests,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};

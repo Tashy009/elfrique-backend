@@ -89,6 +89,8 @@ router.post(
   AwardContestController.createAwardContest
 );
 
+router.get("/allVoteContest", VoteContestController.findAllVoteContest);
+
 router.get("/getallAward", Auth, AwardContestController.getAllAwardsContest);
 
 router.get("/getAward/:id", Auth, AwardContestController.getSingleAwardContest);
@@ -146,6 +148,9 @@ router.post(
   AwardContestController.createAwardNominees
 );
 
+router.get("/allAwards", AwardContestController.findAllAwards);
+
+//events routes
 router.post(
   "/createEvent",
   upload.single("image"),
@@ -172,5 +177,7 @@ router.post(
 );
 
 router.get("/getAllTickets/:id", Auth, TicketController.getAllTicketsById);
+
+router.get("/allEvents", EventController.findAllEvents);
 
 module.exports = router;

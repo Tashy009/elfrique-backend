@@ -123,7 +123,7 @@ const createEventValidation = () => {
     body("enddate", "Enter End Date").not().isEmpty(),
     body("timezone", "Enter timezone").not().isEmpty(),
     body("paymentgateway", "Enter payment gateway").not().isEmpty(),
-    body("description", "Enter event description").not().isEmpty(),
+    /* body("description", "Enter event description").not().isEmpty(), */
     body("category", "Enter category").not().isEmpty(),
     body("organisation", "Enter organisation name").not().isEmpty(),
   ];
