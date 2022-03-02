@@ -102,17 +102,9 @@ router.post(
   VoteContestController.createContestants
 );
 
-router.get(
-  "/getallContestant/:id",
-  Auth,
-  VoteContestController.getAllContestants
-);
+router.get("/getallContestant/:id", VoteContestController.getAllContestants);
 
-router.get(
-  "/getContestant/:title/:id",
-  Auth,
-  VoteContestController.getSingleContestant
-);
+router.get("/getContestant/:id", VoteContestController.getSingleContestant);
 
 router.post(
   "/addSponsor/:id",

@@ -241,23 +241,6 @@ exports.createContestants = async (req, res) => {
 
 exports.getAllContestants = async (req, res) => {
   try {
-    const adminuserId = req.user.id;
-    const profile = await Profile.findOne({
-      where: { adminuserId },
-      include: [
-        {
-          model: User,
-          attributes: {
-            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
-          },
-        },
-      ],
-    });
-    if (!profile) {
-      return res.status(404).send({
-        message: "User not found",
-      });
-    }
     const voteContest = await votingContest.findOne({
       where: { id: req.params.id },
     });
@@ -282,31 +265,6 @@ exports.getAllContestants = async (req, res) => {
 
 exports.getSingleContestant = async (req, res) => {
   try {
-    const adminuserId = req.user.id;
-    const profile = await Profile.findOne({
-      where: { adminuserId },
-      include: [
-        {
-          model: User,
-          attributes: {
-            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
-          },
-        },
-      ],
-    });
-    if (!profile) {
-      return res.status(404).send({
-        message: "User not found",
-      });
-    }
-    const voteContest = await votingContest.findOne({
-      where: { title: req.params.title },
-    });
-    if (!voteContest) {
-      return res.status(404).send({
-        message: "Contest not found",
-      });
-    }
     const contestants = await contestant.findOne({
       where: {
         id: req.params.id,
