@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       awardCategories.belongsTo(models.awardContest);
       awardCategories.hasMany(models.awardNominees, {
         foreignKey: "awardCategoriesId",
-        as: "Categories",
+        as: "nominees",
       });
     }
   }

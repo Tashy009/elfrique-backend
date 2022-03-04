@@ -365,16 +365,20 @@ exports.findAllAwards = async (req, res) => {
       include: [
         {
           model: awardCategories,
+          include: [
+            {
+              model: awardNominees,
+              as: "nominees",
+              attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+              },
+            },
+          ],
           attributes: {
             exclude: ["createdAt", "updatedAt", "deletedAt"],
           },
         },
-        {
-          model: awardNominees,
-          attributes: {
-            exclude: ["createdAt", "updatedAt", "deletedAt"],
-          },
-        },
+
         {
           model: User,
           attributes: {

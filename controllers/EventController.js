@@ -211,6 +211,12 @@ exports.findAllEvents = async (req, res) => {
             exclude: ["createdAt", "updatedAt", "deletedAt"],
           },
         },
+        {
+          model: User,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
       ],
     });
     return res.status(200).send({
