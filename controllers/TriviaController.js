@@ -28,7 +28,7 @@ const upload = require("../helpers/upload");
 
 exports.createTrivia = async (req, res) => {
   try {
-    if (req.file.path) {
+    if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
       req.body.image = result.secure_url;
     }
