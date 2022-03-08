@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      question.belongsTo(models.trivia, {
+        foreignKey: "triviaId",
+        as: "trivia",
+      });
+      question.hasMany(models.questionOption);
     }
   }
   question.init(

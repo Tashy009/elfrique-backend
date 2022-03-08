@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       adminuser.hasMany(models.votingContest);
       adminuser.hasMany(models.awardContest);
       adminuser.hasMany(models.event);
+      adminuser.hasMany(models.trivia);
     }
   }
   adminuser.init(

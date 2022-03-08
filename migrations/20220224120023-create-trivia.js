@@ -8,23 +8,42 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      adminuserId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "adminusers",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
       title: {
         allowNull: false,
         type: Sequelize.STRING,
       },
       image: {
+        allowNull: true,
         type: Sequelize.STRING,
       },
       details: {
+        allowNull: true,
         type: Sequelize.TEXT,
       },
       instruction: {
+        allowNull: true,
         type: Sequelize.TEXT,
       },
       duration: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       type: {
+        allowNull: false,
+        type: Sequelize.ENUM("free", "paid"),
+        defaultValue: "free",
+      },
+      numberoftimes: {
+        allowNull: false,
         type: Sequelize.ENUM("once", "unlimited"),
         defaultValue: "unlimited",
       },

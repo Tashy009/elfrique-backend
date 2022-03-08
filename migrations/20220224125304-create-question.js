@@ -8,6 +8,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      triviaId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "trivia",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
       question: {
         type: Sequelize.TEXT,
       },

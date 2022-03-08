@@ -139,6 +139,14 @@ const createTicketsValidation = () => {
   ];
 };
 
+const createTriviaValidation = () => {
+  return [
+    body("title", "Enter Title").not().isEmpty(),
+    body("duration", "Enter duration").not().isEmpty(),
+    body("type", "Enter type of trivia; free or paid").not().isEmpty(),
+  ];
+};
+
 module.exports = {
   validate,
   okvalidate,
@@ -150,4 +158,5 @@ module.exports = {
   createAwardValidation,
   createEventValidation,
   createTicketsValidation,
+  createTriviaValidation,
 };

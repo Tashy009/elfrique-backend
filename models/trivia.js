@@ -9,6 +9,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      trivia.belongsTo(models.adminuser);
+      trivia.hasMany(models.question, {
+        foreignKey: "triviaId",
+        as: "questions",
+      });
+      trivia.hasMany(models.questionOption, {
+        foreignKey: "triviaId",
+        as: "options",
+      });
     }
   }
   trivia.init(
@@ -17,11 +26,26 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      image: DataTypes.STRING,
-      details: DataTypes.TEXT,
+      image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      details: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
       instruction: DataTypes.TEXT,
-      duration: DataTypes.STRING,
-      type: DataTypes.ENUM("once", "unliimited"),
+      duration: { type: DataTypes.STRING, allowNull: true },
+      type: {
+        allowNull: false,
+        type: DataTypes.ENUM("free", "paid"),
+        defaultValue: "free",
+      },
+      numberoftimes: {
+        allowNull: false,
+        type: DataTypes.ENUM("once", "unlimited"),
+        defaultValue: "unlimited",
+      },
     },
     {
       sequelize,

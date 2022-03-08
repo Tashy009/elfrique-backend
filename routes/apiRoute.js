@@ -13,6 +13,8 @@ const EventController = require("../controllers/EventController");
 
 const TicketController = require("../controllers/TicketController");
 
+const TriviaController = require("../controllers/TriviaController");
+
 const upload = require("../helpers/upload");
 
 const {
@@ -25,6 +27,7 @@ const {
   createAwardValidation,
   createEventValidation,
   createTicketsValidation,
+  createTriviaValidation,
 } = require("../helpers/validator");
 
 const router = express.Router();
@@ -171,5 +174,32 @@ router.post(
 router.get("/getAllTickets/:id", Auth, TicketController.getAllTicketsById);
 
 router.get("/allEvents", EventController.findAllEvents);
+
+router.post(
+  "/createTrivia",
+  Auth,
+  upload.single("image"),
+  createTriviaValidation(),
+  validate,
+  TriviaController.createTrivia
+);
+
+router.post(
+  "/addQuestion/:id",
+  upload.single("image"),
+  Auth,
+  TriviaController.addQuestion
+);
+
+router.get("/getAllTrivia", Auth, TriviaController.getAllTrivia);
+
+router.patch(
+  "/updateTrivia/:id",
+  upload.single("image"),
+  Auth,
+  TriviaController.updateQuestions
+);
+
+router.get("/allTrivia", TriviaController.findAllTrivias);
 
 module.exports = router;
