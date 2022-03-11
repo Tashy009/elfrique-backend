@@ -233,6 +233,7 @@ exports.updateQuestions = async (req, res) => {
 exports.findAllTrivias = async (req, res) => {
   try {
     const trivias = await Trivia.findAll({
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: Question,
@@ -248,6 +249,20 @@ exports.findAllTrivias = async (req, res) => {
               },
             },
           ],
+        },
+        {
+          model: User,
+          include: [
+            {
+              model: Profile,
+              attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+              },
+            },
+          ],
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
         },
       ],
     });
