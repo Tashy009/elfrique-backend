@@ -15,6 +15,8 @@ const TicketController = require("../controllers/TicketController");
 
 const TriviaController = require("../controllers/TriviaController");
 
+const SuperAdminController = require("../controllers/SuperAdminController");
+
 const upload = require("../helpers/upload");
 
 const {
@@ -201,5 +203,17 @@ router.patch(
 );
 
 router.get("/allTrivia", TriviaController.findAllTrivias);
+
+///super admin routes
+
+router.post("/createAdmin", AuthController.createSuperAdmin);
+
+router.post("/adminLogin", AuthController.loginSuperAdmin);
+
+router.get("/getAllUsers", Auth, SuperAdminController.getAllUsers);
+
+router.get("/getAllContests", Auth, SuperAdminController.getAllContest);
+
+router.get("/getEvents", Auth, SuperAdminController.getAllEvents);
 
 module.exports = router;

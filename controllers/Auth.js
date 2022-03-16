@@ -1,17 +1,13 @@
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
 const generateUniqueId = require("generate-unique-id");
 const uniqueString = require("unique-string");
 const nodemailer = require("nodemailer");
-//const sequelize = require("../config/db");
 const User = require("../models").adminuser;
 const ResetPasswords = require("../models").resetpassword;
 const profile = require("../models").profile;
-/* const Referrals = require("../models").Referral;
-const Product = require("../models").Product;
-const Coin = require("../models").Coin; */
+const SuperAdmin = require("../models").superadmin;
 
 const excludeAtrrbutes = { exclude: ["createdAt", "updatedAt", "deletedAt"] };
 
@@ -486,6 +482,63 @@ exports.resetpassword = async (req, res, next) => {
         .catch((err) => {
           return res.status(500).send({ message: "Server Error" });
         });
+    }
+  } catch (error) {
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.createSuperAdmin = async (req, res, next) => {
+  try {
+    const { email, password, confirmpassword } = req.body;
+    const superAdmin = await SuperAdmin.findOne({
+      where: { email },
+      attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+    });
+    if (superAdmin) {
+      return res.status(400).send({ message: "SuperAdmin already exists" });
+    } else if (password !== confirmpassword) {
+      return res.status(400).send({ message: "Passwords do not match" });
+    } else {
+      let currentPassword = bcrypt.hashSync(password, 10);
+      const newSuperAdmin = await SuperAdmin.create({
+        email,
+        password: currentPassword,
+      });
+      return res.status(200).send({ message: "SuperAdmin created" });
+    }
+  } catch (error) {
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.loginSuperAdmin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const superAdmin = await SuperAdmin.findOne({
+      where: { email },
+      attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+    });
+    if (!superAdmin) {
+      return res.status(400).send({ message: "SuperAdmin not found" });
+    } else {
+      const isMatch = bcrypt.compareSync(password, superAdmin.password);
+      if (!isMatch) {
+        return res.status(400).send({ message: "Incorrect password" });
+      } else {
+        const payload = {
+          user: {
+            id: superAdmin.id,
+          },
+        };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+          expiresIn: "1h",
+        });
+        return res.status(200).send({
+          message: "SuperAdmin logged in",
+          token,
+        });
+      }
     }
   } catch (error) {
     return res.status(500).send({ message: "Server Error" });
