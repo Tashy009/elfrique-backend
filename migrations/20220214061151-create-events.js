@@ -53,6 +53,8 @@ module.exports = {
           model: "adminusers",
           key: "id",
         },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       createdAt: {
         allowNull: false,

@@ -14,6 +14,15 @@ module.exports = (sequelize, DataTypes) => {
       adminuser.hasMany(models.awardContest);
       adminuser.hasMany(models.event);
       adminuser.hasMany(models.trivia);
+      adminuser.hasMany(models.Referral, {
+        foreignKey: "user_id",
+        as: "ref_user",
+      });
+
+      adminuser.hasMany(models.Referral, {
+        foreignKey: "referral_id",
+        as: "referrer",
+      });
     }
   }
   adminuser.init(
@@ -32,6 +41,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         type: DataTypes.TINYINT,
         defaultValue: 0,
+      },
+      reference: {
+        allowNull: true,
+        type: DataTypes.STRING,
+      },
+      referral_id: {
+        allowNull: true,
+        type: DataTypes.STRING,
       },
     },
     {

@@ -8,6 +8,7 @@ const User = require("../models").adminuser;
 const ResetPasswords = require("../models").resetpassword;
 const profile = require("../models").profile;
 const SuperAdmin = require("../models").superadmin;
+const Referrals = require("../models").Referral;
 
 const excludeAtrrbutes = { exclude: ["createdAt", "updatedAt", "deletedAt"] };
 
@@ -32,16 +33,47 @@ exports.registerUser = async (req, res, next) => {
     } else if (password !== confirmpassword) {
       return res.status(400).send({ message: "Password does not match" });
     } else {
+      let newUser;
       const hashPwd = bcrypt.hashSync(password, 10);
-
-      const newUser = await User.create({
-        firstname,
-        lastname,
-        phonenumber,
-        email,
-        password: hashPwd,
-        referral_email,
+      let uniqueRef = generateUniqueId({
+        length: 8,
+        useLetters: true,
       });
+
+      const { referral } = req.body;
+      console.log("Reference", referral);
+      const reference = await User.findOne({
+        where: {
+          reference: {
+            [Op.eq]: referral,
+          },
+        },
+      });
+      if (reference) {
+        newUser = await User.create({
+          firstname,
+          lastname,
+          phonenumber,
+          email,
+          password: hashPwd,
+          referral_id: reference.id,
+          reference: uniqueRef,
+        });
+
+        const referral = await Referrals.create({
+          referral_id: reference.id,
+          user_id: newUser.id,
+        });
+      } else {
+        newUser = await User.create({
+          firstname,
+          lastname,
+          phonenumber,
+          email,
+          password: hashPwd,
+          reference: uniqueRef,
+        });
+      }
 
       const newProfile = await profile.create({
         firstname,

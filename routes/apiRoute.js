@@ -17,6 +17,8 @@ const TriviaController = require("../controllers/TriviaController");
 
 const SuperAdminController = require("../controllers/SuperAdminController");
 
+const ReferralController = require("../controllers/referral");
+
 const upload = require("../helpers/upload");
 
 const {
@@ -204,6 +206,8 @@ router.patch(
 
 router.get("/allTrivia", TriviaController.findAllTrivias);
 
+router.get("/getUserRef", Auth, ReferralController.getReferralByUser);
+
 ///super admin routes
 
 router.post("/createAdmin", AuthController.createSuperAdmin);
@@ -215,5 +219,7 @@ router.get("/getAllUsers", Auth, SuperAdminController.getAllUsers);
 router.get("/getAllContests", Auth, SuperAdminController.getAllContest);
 
 router.get("/getEvents", Auth, SuperAdminController.getAllEvents);
+
+router.get("/getAllRef", Auth, ReferralController.getUserReferrals);
 
 module.exports = router;
