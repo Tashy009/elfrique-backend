@@ -147,6 +147,22 @@ const createTriviaValidation = () => {
   ];
 };
 
+const createFormValidation = () => {
+  return [
+    body("title", "Enter Title").not().isEmpty(),
+    body("type", "Enter type of form; free or paid").not().isEmpty(),
+    body("startdate", "Enter Start Date").not().isEmpty(),
+    body("closedate", "Enter End Date").not().isEmpty(),
+  ];
+};
+
+const createQuestionValidation = () => {
+  return [
+    body("question", "Enter Question").not().isEmpty(),
+    body("type", "Enter type of question").not().isEmpty(),
+  ];
+};
+
 module.exports = {
   validate,
   okvalidate,
@@ -159,4 +175,6 @@ module.exports = {
   createEventValidation,
   createTicketsValidation,
   createTriviaValidation,
+  createFormValidation,
+  createQuestionValidation,
 };

@@ -19,6 +19,8 @@ const SuperAdminController = require("../controllers/SuperAdminController");
 
 const ReferralController = require("../controllers/referral");
 
+const FormController = require("../controllers/FormController");
+
 const upload = require("../helpers/upload");
 
 const {
@@ -32,6 +34,8 @@ const {
   createEventValidation,
   createTicketsValidation,
   createTriviaValidation,
+  createFormValidation,
+  createQuestionValidation,
 } = require("../helpers/validator");
 
 const router = express.Router();
@@ -207,6 +211,28 @@ router.patch(
 router.get("/allTrivia", TriviaController.findAllTrivias);
 
 router.get("/getUserRef", Auth, ReferralController.getReferralByUser);
+
+//form routes
+
+router.post(
+  "/createForm",
+  Auth,
+  upload.single("image"),
+  createFormValidation(),
+  validate,
+  FormController.createForm
+);
+
+router.post(
+  "/buildForm/:id",
+  Auth,
+  upload.single("image"),
+  createQuestionValidation(),
+  validate,
+  FormController.buildform
+);
+
+router.get("/getAllForm", Auth, FormController.getFormByUser);
 
 ///super admin routes
 

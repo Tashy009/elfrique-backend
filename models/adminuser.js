@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       adminuser.hasMany(models.awardContest);
       adminuser.hasMany(models.event);
       adminuser.hasMany(models.trivia);
+      adminuser.hasMany(models.eventform);
       adminuser.hasMany(models.Referral, {
         foreignKey: "user_id",
         as: "ref_user",

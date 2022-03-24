@@ -1,8 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
-
 module.exports = (sequelize, DataTypes) => {
-  class Referral extends Model {
+  class formOption extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,18 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Referral.belongsTo(models.adminuser, {
-        foreignKey: "user_id",
-        as: "user",
-      });
-
-      Referral.belongsTo(models.adminuser, {
-        foreignKey: "referral_id",
-        as: "referralID",
-      });
+      formOption.belongsTo(models.eventform);
+      formOption.belongsTo(models.formQuestion);
     }
   }
-  Referral.init(
+  formOption.init(
     {
       id: {
         allowNull: false,
@@ -29,22 +21,37 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV1,
       },
-      referral_id: {
-        allowNull: true,
-        type: DataTypes.UUID,
+      value: {
+        allowNull: false,
+        type: DataTypes.STRING,
       },
-      user_id: {
+      eventformId: {
         allowNull: true,
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
+      },
+      formQuestionId: {
+        allowNull: true,
+        type: DataTypes.INTEGER,
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+      deletedAt: {
+        type: DataTypes.DATE,
       },
     },
     {
       sequelize,
-      modelName: "Referral",
+      modelName: "formOption",
       timestamps: true,
       paranoid: true,
-      tableName: "referrals",
+      tableName: "formOptions",
     }
   );
-  return Referral;
+  return formOption;
 };

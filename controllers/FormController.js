@@ -15,6 +15,9 @@ const awardContest = require("../models").awardContest;
 const awardCategories = require("../models").awardCategories;
 const awardNominees = require("../models").awardNominees;
 const eventsTicket = require("../models").eventsTicket;
+const EventForm = require("../models").eventform;
+const FormQuestion = require("../models").formQuestion;
+const FormOption = require("../models").formOption;
 
 const excludeAtrrbutes = { exclude: ["createdAt", "updatedAt", "deletedAt"] };
 
@@ -23,157 +26,14 @@ const { Op } = require("sequelize");
 const cloudinary = require("../helpers/cloudinary");
 const upload = require("../helpers/upload");
 
-//controllers
-
-exports.createEvents = async (req, res) => {
-  try {
-    const result = await cloudinary.uploader.upload(req.file.path);
-    const adminuserId = req.user.id;
-    req.body.adminuserId = adminuserId;
-    req.body.image = result.secure_url;
-    const profile = await Profile.findOne({
-      where: { adminuserId },
-      include: [
-        {
-          model: User,
-          attributes: {
-            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
-          },
-        },
-      ],
-    });
-    if (!profile) {
-      return res.status(404).send({
-        message: "User not found",
-      });
-    }
-    const events = await Event.create(req.body);
-    return res.status(200).send({
-      events,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ message: "Server Error" });
-  }
-};
-
-exports.getAllEvents = async (req, res) => {
-  try {
-    const adminuserId = req.user.id;
-    const profile = await Profile.findOne({
-      where: { adminuserId },
-      include: [
-        {
-          model: User,
-          attributes: {
-            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
-          },
-           
-        },
-      ],
-    });
-    if (!profile) {
-      return res.status(404).send({
-        message: "User not found",
-      });
-    }
-    const events = await Event.findAll({
-      where: { adminuserId },
-      include: [
-        {
-          model: eventsTicket,
-          attributes: {
-            exclude: ["createdAt", "updatedAt", "deletedAt"],
-          },
-        },
-      ],
-    });
-    return res.status(200).send({
-      events,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ message: "Server Error" });
-  }
-};
-
-exports.getSingleEvent = async (req, res) => {
-  try {
-    const adminuserId = req.user.id;
-    const profile = await Profile.findOne({
-      where: { adminuserId },
-      include: [
-        {
-          model: User,
-          attributes: {
-            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
-          },
-        },
-      ],
-    });
-    if (!profile) {
-      return res.status(404).send({
-        message: "User not found",
-      });
-    }
-    const events = await Event.findOne({
-      where: { adminuserId, id: req.params.id },
-      include: [
-        {
-          model: eventsTicket,
-          attributes: {
-            exclude: ["createdAt", "updatedAt", "deletedAt"],
-          },
-        },
-      ],
-    });
-    return res.status(200).send({
-      events,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ message: "Server Error" });
-  }
-};
-
-exports.deleteEvent = async (req, res) => {
-  try {
-    const adminuserId = req.user.id;
-    const profile = await Profile.findOne({
-      where: { adminuserId },
-      include: [
-        {
-          model: User,
-          attributes: {
-            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
-          },
-        },
-      ],
-    });
-    if (!profile) {
-      return res.status(404).send({
-        message: "User not found",
-      });
-    }
-    const events = await Event.destroy({
-      where: { adminuserId, id: req.params.id },
-    });
-    return res.status(200).send({
-      message: "Event deleted successfully",
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ message: "Server Error" });
-  }
-};
-
-exports.editEvent = async (req, res) => {
+exports.createForm = async (req, res) => {
   try {
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
       req.body.image = result.secure_url;
     }
     const adminuserId = req.user.id;
+    req.body.adminuserId = adminuserId;
     const profile = await Profile.findOne({
       where: { adminuserId },
       include: [
@@ -190,11 +50,9 @@ exports.editEvent = async (req, res) => {
         message: "User not found",
       });
     }
-    const events = await Event.update(req.body, {
-      where: { adminuserId, id: req.params.id },
-    });
+    const form = await EventForm.create(req.body);
     return res.status(200).send({
-      message: "Event updated successfully",
+      form,
     });
   } catch (error) {
     console.log(error);
@@ -202,34 +60,139 @@ exports.editEvent = async (req, res) => {
   }
 };
 
-exports.findAllEvents = async (req, res) => {
+exports.buildform = async (req, res) => {
   try {
-    const events = await Event.findAll({
+    const adminuserId = req.user.id;
+    const profile = await Profile.findOne({
+      where: { adminuserId },
       include: [
         {
-          model: eventsTicket,
-          attributes: {
-            exclude: ["createdAt", "updatedAt", "deletedAt"],
-          },
-        },
-        {
           model: User,
-          include: [
-            {
-              model: Profile,
-              attributes: {
-                exclude: ["createdAt", "updatedAt", "deletedAt"],
-              },
-            },
-          ],
           attributes: {
             exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
           },
         },
       ],
     });
+    if (!profile) {
+      return res.status(404).send({
+        message: "User not found",
+      });
+    }
+    const form = await EventForm.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: FormQuestion,
+          include: [
+            {
+              model: FormOption,
+            },
+          ],
+        },
+      ],
+    });
+    if (!form) {
+      return res.status(404).send({
+        message: "Form not found",
+      });
+    }
+
+    const questionForm = {
+      question: req.body.question,
+      type: req.body.type,
+      eventformId: req.params.id,
+    };
+
+    const question = await FormQuestion.create(questionForm);
+
+    if (req.body.options) {
+      const options = req.body.options.map((option) => {
+        return {
+          value: option,
+          formQuestionId: question.id,
+          eventformId: req.params.id,
+        };
+      });
+      const formOptions = await FormOption.bulkCreate(options);
+    }
     return res.status(200).send({
-      events,
+      form,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.getFormByUser = async (req, res) => {
+  try {
+    const adminuserId = req.user.id;
+    const profile = await Profile.findOne({
+      where: { adminuserId },
+      include: [
+        {
+          model: User,
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
+    });
+    if (!profile) {
+      return res.status(404).send({
+        message: "User not found",
+      });
+    }
+    const form = await EventForm.findAll({
+      where: { adminuserId },
+      include: [
+        {
+          model: FormQuestion,
+          include: [
+            {
+              model: FormOption,
+            },
+          ],
+        },
+      ],
+    });
+    if (!form) {
+      return res.status(404).send({
+        message: "Form not found",
+      });
+    }
+    return res.status(200).send({
+      form,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.getForm = async (req, res) => {
+  try {
+    const form = await EventForm.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: FormQuestion,
+          include: [
+            {
+              model: FormOption,
+            },
+          ],
+        },
+      ],
+    });
+    if (!form) {
+      return res.status(404).send({
+        message: "Form not found",
+      });
+    }
+    return res.status(200).send({
+      form,
     });
   } catch (error) {
     console.log(error);
