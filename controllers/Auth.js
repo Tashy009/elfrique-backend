@@ -293,7 +293,7 @@ exports.registerUser = async (req, res, next) => {
       let transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
         port: process.env.EMAIL_PORT,
-        secure: false, // true for 465, false for other ports
+        secure: true, // true for 465, false for other ports
         tls: {
           rejectUnauthorized: false,
         },
