@@ -199,3 +199,31 @@ exports.getForm = async (req, res) => {
     return res.status(500).send({ message: "Server Error" });
   }
 };
+
+exports.findAllForms = async (req, res) => {
+  try {
+    const form = await EventForm.findAll({
+      include: [
+        {
+          model: FormQuestion,
+          include: [
+            {
+              model: FormOption,
+            },
+          ],
+        },
+      ],
+    });
+    if (!form) {
+      return res.status(404).send({
+        message: "Form not found",
+      });
+    }
+    return res.status(200).send({
+      form,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
