@@ -184,6 +184,20 @@ exports.getForm = async (req, res) => {
             },
           ],
         },
+        {
+          model: User,
+          include: [
+            {
+              model: Profile,
+              attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+              },
+            },
+          ],
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
       ],
     });
     if (!form) {

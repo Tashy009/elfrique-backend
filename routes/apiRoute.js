@@ -236,6 +236,8 @@ router.get("/getAllForm", Auth, FormController.getFormByUser);
 
 router.get("/allForms", FormController.findAllForms);
 
+router.get("/getForm/:id", FormController.getForm);
+
 ///super admin routes
 
 router.post("/createAdmin", AuthController.createSuperAdmin);
