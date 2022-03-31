@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "triviaId",
         as: "options",
       });
+      trivia.hasMany(models.triviaplayer, {
+        foreignKey: "triviaId",
+        as: "players",
+      });
     }
   }
   trivia.init(

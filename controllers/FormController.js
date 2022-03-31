@@ -175,9 +175,11 @@ exports.getForm = async (req, res) => {
   try {
     const form = await EventForm.findOne({
       where: { id: req.params.id },
+      order: [["createdAt", "ASC"]],
       include: [
         {
           model: FormQuestion,
+          order: [["createdAt", "ASC"]],
           include: [
             {
               model: FormOption,
@@ -217,9 +219,11 @@ exports.getForm = async (req, res) => {
 exports.findAllForms = async (req, res) => {
   try {
     const form = await EventForm.findAll({
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: FormQuestion,
+          order: [["createdAt", "ASC"]],
           include: [
             {
               model: FormOption,

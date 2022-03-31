@@ -9,15 +9,10 @@ const nodemailer = require("nodemailer");
 const User = require("../models").adminuser;
 const ResetPasswords = require("../models").resetpassword;
 const Profile = require("../models").profile;
-const Event = require("../models").event;
-const votingContest = require("../models").votingcontest;
-const awardContest = require("../models").awardContest;
-const awardCategories = require("../models").awardCategories;
-const awardNominees = require("../models").awardNominees;
-const eventsTicket = require("../models").eventsTicket;
 const Trivia = require("../models").trivia;
 const Question = require("../models").question;
 const Options = require("../models").questionOption;
+const Player = require("../models").triviaplayer;
 
 const excludeAtrrbutes = { exclude: ["createdAt", "updatedAt", "deletedAt"] };
 
@@ -269,6 +264,63 @@ exports.findAllTrivias = async (req, res) => {
     return res.status(200).send({
       trivias,
     });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.addTriviaPlayer = async (req, res) => {
+  try {
+    const trivia = await Trivia.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: Question,
+          as: "questions",
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+          },
+          include: [
+            {
+              model: Options,
+              attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+              },
+            },
+          ],
+        },
+      ],
+    });
+    if (!trivia) {
+      return res.status(404).send({
+        message: "Trivia not found",
+      });
+    }
+    const player = await Player.findOne({
+      where: { email: req.body.email },
+    });
+    if (!player) {
+      newPlayer = await Player.create({
+        email: req.body.email,
+        name: req.body.name,
+        score: 0,
+        triviaId: req.params.id,
+        timeplayed: 0,
+        city: req.body.city,
+        phonenumber: req.body.phonenumber,
+      });
+
+      return res.status(200).send({
+        message: "Player added successfully",
+        player: newPlayer,
+      });
+    } else {
+      return res.status(200).send({
+        message: "Player already exists",
+        player: player,
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "Server Error" });
