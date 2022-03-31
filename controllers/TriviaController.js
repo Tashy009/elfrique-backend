@@ -326,3 +326,53 @@ exports.addTriviaPlayer = async (req, res) => {
     return res.status(500).send({ message: "Server Error" });
   }
 };
+
+exports.getSingleTrivia = async (req, res) => {
+  try {
+    const trivia = await Trivia.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: Question,
+          as: "questions",
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+          },
+          include: [
+            {
+              model: Options,
+              attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+              },
+            },
+          ],
+        },
+        {
+          model: User,
+          include: [
+            {
+              model: Profile,
+              attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+              },
+            },
+          ],
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+          },
+        },
+      ],
+    });
+    if (!trivia) {
+      return res.status(404).send({
+        message: "Trivia not found",
+      });
+    }
+    return res.status(200).send({
+      trivia,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};

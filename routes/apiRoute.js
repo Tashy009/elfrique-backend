@@ -210,6 +210,8 @@ router.patch(
 
 router.get("/allTrivia", TriviaController.findAllTrivias);
 
+router.get("/getSingleTrivia/:id", TriviaController.getSingleTrivia);
+
 router.post("/createPlayer/:id", TriviaController.addTriviaPlayer);
 
 router.get("/getUserRef", Auth, ReferralController.getReferralByUser);
