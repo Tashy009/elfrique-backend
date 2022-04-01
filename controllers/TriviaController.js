@@ -298,7 +298,7 @@ exports.addTriviaPlayer = async (req, res) => {
       });
     }
     const player = await Player.findOne({
-      where: { email: req.body.email },
+      where: { email: req.body.email, triviaId: req.params.id },
     });
     if (!player) {
       newPlayer = await Player.create({
