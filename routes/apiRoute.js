@@ -21,7 +21,18 @@ const ReferralController = require("../controllers/referral");
 
 const FormController = require("../controllers/FormController");
 
+const SearchController = require("../controllers/searchController");
+
 const upload = require("../helpers/upload");
+
+const {
+  createProposal,
+  getAllProposal,
+  getProposalUser,
+  getProposalSeller,
+  deleteProposal,
+  updateProposal,
+} = require("../controllers/proposal");
 
 const {
   registerValidation,
@@ -255,5 +266,39 @@ router.get("/getAllContests", Auth, SuperAdminController.getAllContest);
 router.get("/getEvents", Auth, SuperAdminController.getAllEvents);
 
 router.get("/getAllRef", Auth, ReferralController.getUserReferrals);
+
+//search routes
+
+router.get("/search/:product", SearchController.searchKeyWord);
+
+//----------------------------------------------------JOB and PROPOSAL-------------------------------
+
+router.post("/createjob/:eventId", EventController.createJob);
+
+router.post("/updatejob/:eventId/:id", EventController.updateJob);
+
+router.get("/getjob/:id", EventController.getJob);
+
+router.get("/getAllJob", EventController.getAllJob);
+
+router.get("/getAlljob/:eventId", EventController.getAllJobEvent);
+
+router.delete("/deletejob/:eventId/:id", EventController.deleteJob);
+
+router.patch("/assignJob/:eventId/:id/:userId", EventController.assignedJob);
+
+router.post("/search", EventController.searchJob);
+
+router.post("/createProposal/:jobId", createProposal);
+
+router.get("/getProposalbyuser/:jobId", getProposalUser);
+
+router.get("/getProposalbyseller/:jobId/:userId", getProposalSeller);
+
+router.get("/getAllProposal/:jobId", getAllProposal);
+
+router.patch("/updateProposal/:jobId", updateProposal);
+
+router.delete("/deleteProposal/:jobId", deleteProposal);
 
 module.exports = router;
