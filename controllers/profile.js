@@ -63,13 +63,17 @@ exports.editUserProfile = async (req, res) => {
       });
     }
     //const { firstname, lastname, phonenumber, email, accountnumber, accountname, about, bankname,gender,twitterURL,facebookURL,instagramURL } = req.body
-    const newProfile = await Profile.update(req.body, {
+    /* const newProfile = await Profile.update(req.body, {
       where: {
-        id: {
-          [Op.eq]: req.user.id,
-        },
+        id: user.id,
       },
+    }); */
+
+    const profile = await Profile.findOne({
+      where: { adminuserId: req.user.id },
     });
+
+    await profile.update(req.body);
     return res.status(200).send({
       message: "Profile updated successfully",
     });
@@ -112,6 +116,49 @@ exports.changePassWord = async (req, res) => {
     });
     return res.status(200).send({
       message: "Password changed successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error" });
+  }
+};
+
+exports.becomeASeller = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        id: req.user.id,
+      },
+      include: [
+        {
+          model: Profile,
+          as: "profile",
+          attributes: excludeAtrrbutes,
+        },
+      ],
+    });
+    if (!user) {
+      return res.status(404).send({
+        message: "User not found",
+      });
+    }
+    const newProfile = await Profile.update(req.body, {
+      where: {
+        adminuserId: {
+          [Op.eq]: req.user.id,
+        },
+      },
+    });
+
+    await user.update({
+      role: "seller",
+    });
+    return res.status(200).send({
+      status: "success",
+      message: "You are now a seller",
+      data: {
+        user,
+      },
     });
   } catch (error) {
     console.log(error);

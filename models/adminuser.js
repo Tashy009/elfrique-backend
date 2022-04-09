@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         allowNull: false,
         type: DataTypes.ENUM("seller", "normalUser"),
-        defaultValue: "free",
+        defaultValue: "normalUser",
       },
     },
     {
